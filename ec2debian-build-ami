@@ -579,7 +579,7 @@ fi
 
 # Install packages on the builing system to make the rest of this script run smoothly.
 # FIXME: this JRE package is probably specific to ubuntu. 
-apt-get install -y binutils unzip debootstrap rsync ruby openssl curl ca-certificates libopenssl-ruby openjdk-6-jre-headless
+apt-get install -y binutils unzip debootstrap rsync ruby openssl curl ca-certificates libopenssl-ruby sun-java6-jdk
 
 export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
 
@@ -657,6 +657,14 @@ ln -s /sbin/MAKEDEV $imagedir/dev/MAKEDEV
 
 # Upgrade/install packages
 chroot $imagedir apt-get -y upgrade
+
+chroot $imagedir debconf-set-selections <<<'sun-java6-jre sun-java6-jre/jcepolicy note'
+chroot $imagedir debconf-set-selections <<<'sun-java6-jre sun-java6-jre/stopthread boolean true'
+chroot $imagedir debconf-set-selections <<<'sun-java6-jre shared/accepted-sun-dlj-v1-1 boolean true'
+chroot $imagedir debconf-set-selections <<<'sun-java6-bin shared/accepted-sun-dlj-v1-1 boolean true'
+chroot $imagedir debconf-set-selections <<<'sun-java6-jre shared/present-sun-dlj-v1-1 note'
+chroot $imagedir debconf-set-selections <<<'sun-java6-bin shared/present-sun-dlj-v1-1 note'
+
 export DEBIAN_FRONTEND=noninteractive
 chroot $imagedir apt-get install -y $packages
 chroot $imagedir apt-get remove -y apparmor apparmor-utils || true
