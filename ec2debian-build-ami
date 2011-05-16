@@ -668,6 +668,7 @@ chroot $imagedir debconf-set-selections <<<'sun-java6-bin shared/present-sun-dlj
 export DEBIAN_FRONTEND=noninteractive
 chroot $imagedir apt-get install -y $packages
 chroot $imagedir apt-get remove -y apparmor apparmor-utils || true
+chroot $imagedir apt-get remove -y avahi-daemon libavahi-* || true
 unset DEBIAN_FRONTEND
 
 # Install PvGrub
